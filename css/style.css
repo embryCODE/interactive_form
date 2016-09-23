@@ -184,3 +184,7 @@ button:hover {
     display: block;
     width: 100%;
 }
+
+.disabled {
+    color: grey;
+}

@@ -59,34 +59,69 @@ setTshirtMenus();
 
 var totalPrice = 0;
 
-// Get price of event from checkbox label text.
-var returnPrice = function (elementToCheck) {
+// Use regular expression to extract price from .activites label.
+var returnPrice = function (inputElementToCheck) {
     var priceRegEx = /\$\d+(\.\d{1,2})?/; // RegEx to search for a price value that starts with "$".
-    var price = elementToCheck.text().match(priceRegEx); // Searches element for match with RegEx.
+    var price = inputElementToCheck.text().match(priceRegEx); // Searches element for match with RegEx.
     price = price[0]; // Retrieves price only (index 0) from the array.
     price = price.replace(/[^0-9\.]+/g,""); // Removes dollar sign from front of price.
     price = parseFloat(price); // Converts price string to float.
     return price;
 };
 
+// Add or subtract price from totalPrice.
 var addToTotal = function (price) {
     totalPrice += price;
-    console.log(totalPrice);
 };
-
 var subtractFromTotal = function (price) {
     totalPrice -= price;
-    console.log(totalPrice);
 };
 
-// Checkbox event listener.
-$("[type='checkbox']").change(function () {
-    var price = returnPrice($(this).parent());
-    if ($(this).prop('checked')) {
+// Append total price on activites div.
+var writeTotalPrice = function () {
+    $(".total-price").remove(); // First remove totalPrice h3 if it exists.
+    // Only append total price if price is greater than 0.
+    if (totalPrice > 0) {
+        $(".activities").append("<h3 class='total-price'>Total: $" + totalPrice + "</h3>");
+    }
+};
+
+// Update total price with price of checked or unchecked element.
+var updatePrice = function (clickedItem) {
+    var inputToCheck = clickedItem.children();
+    var price = returnPrice(clickedItem);
+    // Call addToTotal or subtractFromTotal depending on whether checked or unchecked.
+    if (inputToCheck.prop('checked')) {
         addToTotal(price);
     } else {
         subtractFromTotal(price);
     }
+
+    writeTotalPrice();
+};
+
+// Use regular expression to extract date and time from .activites label.
+var getActivityData = function (activityToCheck) {
+    var dayAndTime = activityToCheck.text().match(/—\s(.*),/); // Extracts day and time between "–" and "," characters.
+
+    // Checks if result of previous expression was null.
+    if (dayAndTime) {
+        dayAndTime = dayAndTime[1]; // If not null, sets dayAndTime to extracted day and time from array.
+    }
+
+    return dayAndTime;
+};
+
+// Check for schedule conflicts between checked items.
+var checkSchedule = function (clickedItem) {
+    var clickedItemSchedule = getActivityData(clickedItem);
+    console.log(clickedItemSchedule);
+};
+
+// Checkbox event listener.
+$(".activities label").change(function () {
+    updatePrice($(this));
+    checkSchedule($(this));
 });
 
 

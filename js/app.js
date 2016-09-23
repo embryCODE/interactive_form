@@ -57,6 +57,36 @@ setTshirtMenus();
 
 ////////// Register for Activities //////////
 
+// Use regular expression to extract date and time from .activites label.
+var getActivityData = function (activityToCheck) {
+    var dayAndTime = activityToCheck.text().match(/—\s(.*),/); // Extracts day and time between "–" and "," characters.
+
+    // Checks if result of previous expression was null.
+    if (dayAndTime) {
+        dayAndTime = dayAndTime[1]; // If not null, sets dayAndTime to extracted day and time from array.
+    }
+
+    return dayAndTime;
+};
+
+// Check for schedule conflicts between checked items.
+var checkSchedule = function (clickedItem) {
+    var clickedItemSchedule = getActivityData(clickedItem);
+
+    // Loop through each .activities label item and check if its schedule matches clickedItemSchedule.
+    $(".activities label").each(function () {
+        var thisItemSchedule = getActivityData($(this));
+
+        if (thisItemSchedule === clickedItemSchedule) {
+            $(this).children().prop("disabled", true);
+            $(this).addClass("disabled");
+        }
+    });
+
+    clickedItem.children().prop("disabled", false);
+    clickedItem.removeClass("disabled");
+};
+
 var totalPrice = 0;
 
 // Use regular expression to extract price from .activites label.
@@ -98,24 +128,6 @@ var updatePrice = function (clickedItem) {
     }
 
     writeTotalPrice();
-};
-
-// Use regular expression to extract date and time from .activites label.
-var getActivityData = function (activityToCheck) {
-    var dayAndTime = activityToCheck.text().match(/—\s(.*),/); // Extracts day and time between "–" and "," characters.
-
-    // Checks if result of previous expression was null.
-    if (dayAndTime) {
-        dayAndTime = dayAndTime[1]; // If not null, sets dayAndTime to extracted day and time from array.
-    }
-
-    return dayAndTime;
-};
-
-// Check for schedule conflicts between checked items.
-var checkSchedule = function (clickedItem) {
-    var clickedItemSchedule = getActivityData(clickedItem);
-    console.log(clickedItemSchedule);
 };
 
 // Checkbox event listener.

@@ -231,7 +231,7 @@ var validate = function () {
     }
 
     // T-shirt
-    if (false) {
+    if (!($("#design option[value='js puns']").selected || $("#design option[value='heart js']").selected)) {
         arrayOfErrors.push("tshirtInvalid");
     }
 

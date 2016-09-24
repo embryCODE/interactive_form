@@ -192,6 +192,9 @@ var selectPaymentToShow = function(selectedOption) {
     hideShowPaymentInfo(classToPassIn);
 };
 
+// Hide bitcoin and paypal on page load.
+hideShowPaymentInfo(".credit-card");
+
 // Event listener to pass selected value to selectPaymentToShow().
 $("#payment").change(function() {
     selectPaymentToShow($(this).val());

@@ -217,9 +217,11 @@ var validateEmail = function () {
     return validEmailRegEx.test(enteredEmail);
 };
 
-// Credit card validation.
+// Credit card validation. Many thanks to https://gist.github.com/DiegoSalazar/4075533.
 var validateCC = function () {
-    
+    cardNumber = parseInt($("#cc-num").val());
+    console.log(cardNumber);
+    return false;
 };
 
 // Validates all fields and returns true or false.

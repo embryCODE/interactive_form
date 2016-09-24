@@ -219,9 +219,13 @@ var validateEmail = function () {
 
 // Credit card validation. Many thanks to https://gist.github.com/DiegoSalazar/4075533.
 var validateCC = function () {
+    // Get card number, as number, from input field.
     cardNumber = parseInt($("#cc-num").val());
-    console.log(cardNumber);
-    return false;
+
+
+
+    // Return true if card number is valid.
+    // return ???;
 };
 
 // Validates all fields and returns true or false.
@@ -229,6 +233,7 @@ var validate = function () {
     var valid; // Make true if all validation passes.
 
     // Test all fields and call errorStatus() for each.
+
     // Name
     if ($("#name").val().length > 0) {
         errorStatus("nameValid");
@@ -266,13 +271,13 @@ var validate = function () {
         errorStatus('cardNumberInvalid');
     }
     // Credit Card Zip
-    if ($("#zip").val().length === 5) {
+    if (($("#zip").val().length === 5) && !isNaN(parseInt($("#zip").val()))) {
         errorStatus("cardZipValid");
     } else {
         errorStatus('cardZipInvalid');
     }
     // Credit Card CVV
-    if ($("#cvv").val().length === 3) {
+    if (($("#cvv").val().length === 3) && !isNaN(parseInt($("#cvv").val()))) {
         errorStatus("cardCVVValid");
     } else {
         errorStatus('cardCVVInvalid');
@@ -329,7 +334,7 @@ var errorStatus = function (status) {
     if (status === "cardZipInvalid") {
         $("#zip").prev().addClass("invalid");
     } else if (status === "cardZipValid"){
-        $("#cc-num").prev().removeClass("invalid");
+        $("#zip").prev().removeClass("invalid");
     }
     if (status === "cardCVVInvalid") {
         $("#cvv").prev().addClass("invalid");

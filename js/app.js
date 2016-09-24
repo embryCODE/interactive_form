@@ -204,7 +204,56 @@ $("#payment").change(function() {
 
 ////////// Form Validation //////////
 
+var nameValid;
+var emailValid;
+var tshirtValid;
+var activityValid;
+var paymentValid;
+var cardNumberValid;
+var cardZipValid;
+var cardCVVValid;
 
+var $nameError = $("<span class='invalid'> (please provide your name)</span>");
+var $emailError = $("<span class='invalid'> (please provide a valid email address)</span>");
+var $tshirtError = $("<p class='invalid'>Don't forget to pick a T-shirt</p>");
+var $activitiesError = $("<p class='invalid'>(please choose at least one activity)</p>");
+var $paymentError = $("<p class='invalid'>(please choose your payment method)</p>");
+
+// Validates all fields and returns true or false.
+var validate = function () {
+
+    displayErrors();
+};
+
+// Displays error messages for invalid fields.
+var displayErrors = function () {
+    if (!nameValid) {
+        $("#name").prev().addClass("invalid");
+        $("#name").prev().append($nameError);
+    }
+    if (!emailValid) {
+        $("#mail").prev().addClass("invalid");
+        $("#mail").prev().append($emailError);
+    }
+    if (!tshirtValid) {
+        $(".shirt legend").append($tshirtError);
+    }
+    if (!activityValid) {
+        $(".activities legend").append($activitiesError);
+    }
+    if (!paymentValid) {
+        $(".payment-info legend").append($paymentError);
+    }
+    if (!cardNumberValid) {
+        $("#cc-num").prev().addClass("invalid");
+    }
+    if (!cardZipValid) {
+        $("#zip").prev().addClass("invalid");
+    }
+    if (!cardCVVValid) {
+        $("#cvv").prev().addClass("invalid");
+    }
+};
 
 
 

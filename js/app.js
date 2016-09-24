@@ -167,8 +167,33 @@ $(".activities label").change(function () {
 
 
 ////////// Payment Info //////////
+// Make "Credit Card" the selected option in dropdown and disable the "Select Payment Method" option.
+$("[value='credit card']").prop("selected", true);
+$("[value='select_method']").prop("disabled", true);
 
+// Hide all then show selected payment info.
+var hideShowPaymentInfo = function (classToShow) {
+    $(".credit-card, .paypal, .bitcoin").hide();
+    $(classToShow).show();
+};
 
+// Select which payment type to show using hideShowPaymentInfo().
+var selectPaymentToShow = function(selectedOption) {
+    var classToPassIn;
+
+    if (selectedOption === "credit card") {
+        classToPassIn = ".credit-card";
+    } else {
+        classToPassIn = "." + selectedOption;
+    }
+
+    hideShowPaymentInfo(classToPassIn);
+};
+
+$("#payment").change(function() {
+    // Pass selected value to selectPaymentToShow().
+    selectPaymentToShow($(this).val());
+});
 
 
 

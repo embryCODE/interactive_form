@@ -70,21 +70,49 @@ var getActivityData = function (activityToCheck) {
 };
 
 // Check for schedule conflicts between checked items.
-var checkSchedule = function (clickedItem) {
+var checkScheduleConflicts = function (clickedItem) {
+    // Find day and time of clicked item.
     var clickedItemSchedule = getActivityData(clickedItem);
 
-    // Loop through each .activities label item and check if its schedule matches clickedItemSchedule.
-    $(".activities label").each(function () {
-        var thisItemSchedule = getActivityData($(this));
+    var itemToDisable; // For keeping track of item to be disabled.
+    var itemToEnable; // For keeping track of item to be enabled.
 
-        if (thisItemSchedule === clickedItemSchedule) {
-            $(this).children().prop("disabled", true);
-            $(this).addClass("disabled");
+    // Checks all items except the item clicked.
+    var itemsToCheck = clickedItem.siblings("label");
+
+    itemsToCheck.each(function () {
+        // Find day and time of item in loop.
+        thisItemSchedule = getActivityData($(this));
+
+        // Select checkbox of clicked item.
+        var checkbox = clickedItem.children();
+
+        // Check each item in loop for conflict.
+        // If conflict found, store in itemToDisable if checking the box.
+        // Store in itemToEnable if unchecking the box.
+        if ((thisItemSchedule === clickedItemSchedule) && (checkbox.prop("checked"))) {
+            itemToDisable = $(this);
+        } else if ((thisItemSchedule === clickedItemSchedule) && (!checkbox.prop("checked"))){
+            itemToEnable = $(this);
         }
     });
 
-    clickedItem.children().prop("disabled", false);
-    clickedItem.removeClass("disabled");
+    // Pass items to be disabled or enabled to function to display conflicts.
+    displayScheduleConflicts(itemToDisable, itemToEnable);
+};
+
+// Display the results of checkScheduleConflicts.
+var displayScheduleConflicts = function (disable, enable) {
+    
+    // Disable or enable based on argument passed in to function.
+    if (disable) {
+        disable.children().prop("disabled", true);
+        disable.addClass("disabled");
+    }
+    if (enable) {
+        enable.children().prop("disabled", false);
+        enable.removeClass("disabled");
+    }
 };
 
 var totalPrice = 0;
@@ -133,7 +161,7 @@ var updatePrice = function (clickedItem) {
 // Checkbox event listener.
 $(".activities label").change(function () {
     updatePrice($(this));
-    checkSchedule($(this));
+    checkScheduleConflicts($(this));
 });
 
 

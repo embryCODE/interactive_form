@@ -221,8 +221,19 @@ var $paymentError = $("<p class='invalid'>(please choose your payment method)</p
 
 // Validates all fields and returns true or false.
 var validate = function () {
+    var valid;
 
-    displayErrors();
+    if (!valid) {
+        // If this was a real form I would submit the form here.
+        // $("form").submit();
+
+        // Fake submit.
+        $(".submitted").remove(); // Deletes first in case submit button clicked more than once.
+        $("header").append("<p class='submitted'>Your form has been submitted!</p>");
+        $('html, body').scrollTop(0);
+    } else {
+        displayErrors();
+    }
 };
 
 // Displays error messages for invalid fields.
@@ -254,6 +265,12 @@ var displayErrors = function () {
         $("#cvv").prev().addClass("invalid");
     }
 };
+
+// Event handler for submit button.
+$("button[type='submit']").click( function (e) {
+    validate();
+    e.preventDefault();
+});
 
 
 

@@ -204,65 +204,76 @@ $("#payment").change(function() {
 
 ////////// Form Validation //////////
 
-var $nameError = $("<span class='invalid'> (please provide your name)</span>");
-var $emailError = $("<span class='invalid'> (please provide a valid email address)</span>");
-var $tshirtError = $("<p class='invalid'>Don't forget to pick a T-shirt</p>");
-var $activitiesError = $("<p class='invalid'>(please choose at least one activity)</p>");
-var $paymentError = $("<p class='invalid'>(please choose your payment method)</p>");
+var $nameError = $("<span class='invalid name-error'> (please provide your name)</span>");
+var $emailError = $("<span class='invalid email-error'> (please provide a valid email address)</span>");
+var $tshirtError = $("<p class='invalid tshirt-error'>Don't forget to pick a T-shirt</p>");
+var $activitiesError = $("<p class='invalid activities-error'>(please choose at least one activity)</p>");
+var $paymentError = $("<p class='invalid payment-error'>(please choose your payment method)</p>");
 
 // Email validation.
 var validateEmail = function () {
     return true;
 };
 
+// Credit card validation.
+var validateCC = function () {
+    return true;
+};
+
 // Validates all fields and returns true or false.
 var validate = function () {
-    var arrayOfErrors = []; // Stores errors in array as strings.
     var valid; // Make true if all validation passes.
 
+    // Test all fields and call errorStatus() for each.
     // Name
-    if ($("#name").val().length === 0) {
-        arrayOfErrors.push("nameInvalid");
+    if ($("#name").val().length > 0) {
+        errorStatus("nameValid");
+    } else {
+        errorStatus("nameInvalid");
     }
-
     // Email
-    if (!validateEmail()) {
-        arrayOfErrors.push("emailInvalid");
+    if (validateEmail()) {
+        errorStatus("emailValid");
+    } else {
+        errorStatus('emailInvalid');
     }
-
     // T-shirt
-    if (!($("#design option[value='js puns']").selected || $("#design option[value='heart js']").selected)) {
-        arrayOfErrors.push("tshirtInvalid");
+    if ($('#design option[value="js puns"]').is(':selected') || $('#design option[value="heart js"]').is(':selected')) {
+        errorStatus("tshirtValid");
+    } else {
+        errorStatus('tshirtInvalid');
     }
-
     // Activities
-    if (false) {
-        arrayOfErrors.push("activitiesInvalid");
+    if ($(".activities input").is(':checked')) {
+        errorStatus("activitiesValid");
+    } else {
+        errorStatus('activitiesInvalid');
     }
-
     // Payment
-    if (false) {
-        arrayOfErrors.push("paymentInvalid");
+    if ($("#payment option").is(':selected')) {
+        errorStatus("paymentValid");
+    } else {
+        errorStatus('paymentInvalid');
     }
-
     // Credit Card Number
-    if (false) {
-        arrayOfErrors.push("cardNumberInvalid");
+    if (validateCC()) {
+        errorStatus("cardNumberValid");
+    } else {
+        errorStatus('cardNumberInvalid');
     }
-
     // Credit Card Zip
-    if (false) {
-        arrayOfErrors.push("cardZipInvalid");
+    if ($("#zip").val().length === 5) {
+        errorStatus("cardZipValid");
+    } else {
+        errorStatus('cardZipInvalid');
     }
-
     // Credit Card CVV
-    if (false) {
-        arrayOfErrors.push("cardCVVInvalid");
+    if ($("#cvv").val().length === 3) {
+        errorStatus("cardCVVValid");
+    } else {
+        errorStatus('cardCVVInvalid');
     }
 
-    if (arrayOfErrors.length === 0) {
-        valid = true;
-    }
     // Display errors if invalid, submit form if valid.
     if (valid) {
         // If this was a real form I would submit the form like this.
@@ -272,40 +283,54 @@ var validate = function () {
         $(".submitted").remove(); // Deletes first in case submit button clicked more than once.
         $("header").append("<p class='submitted'>Your form has been submitted!</p>");
         $('html, body').scrollTop(0);
-    } else {
-        displayErrors(arrayOfErrors);
     }
 };
 
 // Displays error messages for invalid fields.
-var displayErrors = function (arrayOfErrors) {
-    for (var i = 0; i < arrayOfErrors.length; i++) {
-        if (arrayOfErrors[i] === "nameInvalid") {
-            $("#name").prev().addClass("invalid");
-            $("#name").prev().append($nameError);
-        }
-        if (arrayOfErrors[i] === "emailInvalid") {
-            $("#mail").prev().addClass("invalid");
-            $("#mail").prev().append($emailError);
-        }
-        if (arrayOfErrors[i] === "tshirtInvalid") {
-            $(".shirt legend").append($tshirtError);
-        }
-        if (arrayOfErrors[i] === "activitiesInvalid") {
-            $(".activities legend").append($activitiesError);
-        }
-        if (arrayOfErrors[i] === "paymentInvalid") {
-            $(".payment-info legend").append($paymentError);
-        }
-        if (arrayOfErrors[i] === "cardNumberInvalid") {
-            $("#cc-num").prev().addClass("invalid");
-        }
-        if (arrayOfErrors[i] === "cardZipInvalid") {
-            $("#zip").prev().addClass("invalid");
-        }
-        if (arrayOfErrors[i] === "cardCVVInvalid") {
-            $("#cvv").prev().addClass("invalid");
-        }
+var errorStatus = function (status) {
+    if (status === "nameInvalid") {
+        $("#name").prev().addClass("invalid");
+        $("#name").prev().append($nameError);
+    } else if (status === "nameValid"){
+        $("#name").prev().removeClass("invalid");
+        $(".name-error").remove();
+    }
+    if (status === "emailInvalid") {
+        $("#mail").prev().addClass("invalid");
+        $("#mail").prev().append($emailError);
+    } else if (status === "emailValid"){
+        $("#mail").prev().removeClass("invalid");
+        $(".email-error").remove();
+    }
+    if (status === "tshirtInvalid") {
+        $(".shirt legend").append($tshirtError);
+    } else if (status === "tshirtValid"){
+        $(".tshirt-error").remove();
+    }
+    if (status === "activitiesInvalid") {
+        $(".activities legend").append($activitiesError);
+    } else if (status === "activitiesValid"){
+        $(".activities-error").remove();
+    }
+    if (status === "paymentInvalid") {
+        $(".payment-info legend").append($paymentError);
+    } else if (status === "paymentValid"){
+        $(".payment-error").remove();
+    }
+    if (status === "cardNumberInvalid") {
+        $("#cc-num").prev().addClass("invalid");
+    } else if (status === "cardNumberValid"){
+        $("#cc-num").prev().removeClass("invalid");
+    }
+    if (status === "cardZipInvalid") {
+        $("#zip").prev().addClass("invalid");
+    } else if (status === "cardZipValid"){
+        $("#cc-num").prev().removeClass("invalid");
+    }
+    if (status === "cardCVVInvalid") {
+        $("#cvv").prev().addClass("invalid");
+    } else if (status === "cardCVVValid"){
+        $("#cvv").prev().removeClass("invalid");
     }
 };
 

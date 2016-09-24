@@ -8,14 +8,15 @@
 
 ////////// Job Role //////////
 
-// Reveal a text field when the "Other" option is selected from the "Job Role" drop down menu.
+// Hide #other-title when javascript is enabled.
+$("#other-title").hide();
 
+// Reveal a text field when the "Other" option is selected from the "Job Role" drop down menu.
 $("#title").change(function() {
     if ($(this).val() === "other") {
-        var newInputElement = '<input id="other-title" placeholder="Your Title" name="user_other_title">';
-        $("#title").after(newInputElement);
+        $("#other-title").show();
     } else {
-        $("#other-title").remove(); // Removes newInputElement if other options are selected.
+        $("#other-title").hide();
     }
 });
 
@@ -167,6 +168,7 @@ $(".activities label").change(function () {
 
 
 ////////// Payment Info //////////
+
 // Make "Credit Card" the selected option in dropdown and disable the "Select Payment Method" option.
 $("[value='credit card']").prop("selected", true);
 $("[value='select_method']").prop("disabled", true);
@@ -177,7 +179,7 @@ var hideShowPaymentInfo = function (classToShow) {
     $(classToShow).show();
 };
 
-// Select which payment type to show using hideShowPaymentInfo().
+// Select which payment type to show and pass to hideShowPaymentInfo().
 var selectPaymentToShow = function(selectedOption) {
     var classToPassIn;
 
@@ -190,8 +192,8 @@ var selectPaymentToShow = function(selectedOption) {
     hideShowPaymentInfo(classToPassIn);
 };
 
+// Event listener to pass selected value to selectPaymentToShow().
 $("#payment").change(function() {
-    // Pass selected value to selectPaymentToShow().
     selectPaymentToShow($(this).val());
 });
 

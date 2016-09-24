@@ -212,12 +212,14 @@ var $paymentError = $("<p class='invalid payment-error'>(please choose your paym
 
 // Email validation.
 var validateEmail = function () {
-    return true;
+    var enteredEmail = $("#mail").val();
+    validEmailRegEx = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+    return validEmailRegEx.test(enteredEmail);
 };
 
 // Credit card validation.
 var validateCC = function () {
-    return true;
+    
 };
 
 // Validates all fields and returns true or false.

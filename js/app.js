@@ -103,7 +103,7 @@ var checkScheduleConflicts = function (clickedItem) {
 
 // Display the results of checkScheduleConflicts.
 var displayScheduleConflicts = function (disable, enable) {
-    
+
     // Disable or enable based on argument passed in to function.
     if (disable) {
         disable.children().prop("disabled", true);
@@ -115,8 +115,6 @@ var displayScheduleConflicts = function (disable, enable) {
     }
 };
 
-var totalPrice = 0;
-
 // Use regular expression to extract price from .activites label.
 var returnPrice = function (inputElementToCheck) {
     var priceRegEx = /\$\d+(\.\d{1,2})?/; // RegEx to search for a price value that starts with "$".
@@ -126,6 +124,8 @@ var returnPrice = function (inputElementToCheck) {
     price = parseFloat(price); // Converts price string to float.
     return price;
 };
+
+var totalPrice = 0;
 
 // Add or subtract price from totalPrice.
 var addToTotal = function (price) {

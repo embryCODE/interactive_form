@@ -211,11 +211,11 @@ select {
   color: #000;
   border-radius: 0;
   border: none;
-  border-color: #accbd9;
+  border-color: #c1deeb;
   min-width: 100%;
   padding-right: 40px;
-  background: #accbd9 url("../images/icon-down-arrow.svg") right 15px center no-repeat;
-  background-color: #accbd9;
+  background: #c1deeb url("../images/icon-down-arrow.svg") right 15px center no-repeat;
+  background-color: #c1deeb;
   background-size: 20px;
 }
 

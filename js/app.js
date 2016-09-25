@@ -1,8 +1,12 @@
 ////////// Interactive Form //////////
 //
 // Author: Mason Embry
-// Last Updated: 9/23/2016
+// Created 9/23/2016
+// Last Updated: 9/25/2016
 //
+// Tested in current versions of Chrome, Safari, and Firefox.
+//
+//////////////////////////////////////
 
 
 
@@ -11,7 +15,7 @@
 // Hide #other-title when javascript is enabled.
 $("#other-title").hide();
 
-// Reveal a text field when the "Other" option is selected from the "Job Role" drop down menu.
+// Reveal a text field when "Other" option is selected from the "Job Role" drop down menu.
 $("#title").change(function() {
     if ($(this).val() === "other") {
         $("#other-title").show();
@@ -26,18 +30,19 @@ $("#title").change(function() {
 
 // Only display the options that match the design selected in the "Design" menu.
 
-// Function to set t-shirt dropdown menus.
+// Set appropriate t-shirt dropdown menu.
 var setTshirtMenus = function() {
-    // First, hide all t-shirt selections.
+    // First, hide all t-shirt color options within the #colors select menu.
     $("#color option").hide();
 
-    // Show the #colors until hidden.
+    // Show the #colors select menu until hidden.
     $("#colors").show();
 
-    // Show certain t-shirts, using classes, depending on the #design value chosen.
+    // Show certain color options, using classes, depending on the #design value chosen.
     if ($("#design").val() === "js puns") {
         $(".js-puns").show();
-        $(".js-puns").eq(0).prop("selected", true); // This line is required to make the #color menu display the first selection.
+        // This line is required to make the #color menu display the first selection.
+        $(".js-puns").eq(0).prop("selected", true);
     } else if ($("#design").val() === "heart js") {
         $(".heart-js").show();
         $(".heart-js").eq(0).prop("selected", true);
@@ -60,11 +65,13 @@ setTshirtMenus();
 
 // Use regular expression to extract date and time from .activites label.
 var getActivityData = function (activityToCheck) {
-    var dayAndTime = activityToCheck.text().match(/—\s(.*),/); // Extracts day and time between "–" and "," characters.
+    // Extract day and time between "–" and "," characters.
+    var dayAndTime = activityToCheck.text().match(/—\s(.*),/);
 
-    // Checks if result of previous expression was null.
+    // Check if result of previous expression was null.
     if (dayAndTime) {
-        dayAndTime = dayAndTime[1]; // If not null, sets dayAndTime to extracted day and time from array.
+        // If not null, convert dayAndTime from array to string using index 1 as the value.
+        dayAndTime = dayAndTime[1];
     }
 
     return dayAndTime;
@@ -78,19 +85,20 @@ var checkScheduleConflicts = function (clickedItem) {
     var itemToDisable; // For keeping track of item to be disabled.
     var itemToEnable; // For keeping track of item to be enabled.
 
-    // Checks all items except the item clicked.
+    // Get all items except the item clicked.
     var itemsToCheck = clickedItem.siblings("label");
 
+    // Loop through itemsToCheck and check for conflicts with clickedItemSchedule.
     itemsToCheck.each(function () {
-        // Find day and time of item in loop.
+        // Find day and time of current item in loop.
         var thisItemSchedule = getActivityData($(this));
 
         // Select checkbox of clicked item.
         var checkbox = clickedItem.children();
 
         // Check each item in loop for conflict.
-        // If conflict found, store in itemToDisable if checking the box.
-        // Store in itemToEnable if unchecking the box.
+        // If conflict found, store in itemToDisable if checking the box and,
+        // store in itemToEnable if unchecking the box.
         if ((thisItemSchedule === clickedItemSchedule) && (checkbox.prop("checked"))) {
             itemToDisable = $(this);
         } else if ((thisItemSchedule === clickedItemSchedule) && (!checkbox.prop("checked"))){
@@ -98,11 +106,11 @@ var checkScheduleConflicts = function (clickedItem) {
         }
     });
 
-    // Pass items to be disabled or enabled to function to display conflicts.
+    // Pass items to be disabled or enabled to displayScheduleConflicts().
     displayScheduleConflicts(itemToDisable, itemToEnable);
 };
 
-// Display the results of checkScheduleConflicts.
+// Display the results of checkScheduleConflicts().
 var displayScheduleConflicts = function (disable, enable) {
 
     // Disable or enable based on argument passed in to function.
@@ -118,17 +126,27 @@ var displayScheduleConflicts = function (disable, enable) {
 
 // Use regular expression to extract price from .activites label.
 var returnPrice = function (inputElementToCheck) {
-    var priceRegEx = /\$\d+(\.\d{1,2})?/; // RegEx to search for a price value that starts with "$".
-    var price = inputElementToCheck.text().match(priceRegEx); // Searches element for match with RegEx.
-    price = price[0]; // Retrieves price only (index 0) from the array.
-    price = price.replace(/[^0-9\.]+/g,""); // Removes dollar sign from front of price.
-    price = parseFloat(price); // Converts price string to float.
+
+    // RegEx to search for a price value that starts with "$".
+    var priceRegEx = /\$\d+(\.\d{1,2})?/;
+
+    // Search element in parameter for match with RegEx.
+    var price = inputElementToCheck.text().match(priceRegEx);
+
+    // Retrieve price only (index 0) from the array.
+    price = price[0];
+
+    // Remove dollar sign from front of price.
+    price = price.replace(/[^0-9\.]+/g,"");
+
+    // Convert price string to float.
+    price = parseFloat(price);
+
     return price;
 };
 
-var totalPrice = 0;
-
 // Add or subtract price from totalPrice.
+var totalPrice = 0;
 var addToTotal = function (price) {
     totalPrice += price;
 };
@@ -138,7 +156,10 @@ var subtractFromTotal = function (price) {
 
 // Append total price on activites div.
 var writeTotalPrice = function () {
-    $(".total-price").remove(); // First remove totalPrice h4 if it exists.
+
+    // First remove totalPrice h4 if it exists.
+    $(".total-price").remove();
+
     // Only append total price if price is greater than 0.
     if (totalPrice > 0) {
         $(".activities").append("<h4 class='total-price'>Total: $" + totalPrice + "</h4>");
@@ -147,9 +168,14 @@ var writeTotalPrice = function () {
 
 // Update total price with price of checked or unchecked element.
 var updatePrice = function (clickedItem) {
-    var inputToCheck = clickedItem.children();
+
+    // Get price of clicked item.
     var price = returnPrice(clickedItem);
-    // Call addToTotal or subtractFromTotal depending on whether checked or unchecked.
+
+    // Get child of clickedItem, which is the actual checkbox.
+    var inputToCheck = clickedItem.children();
+
+    // Call addToTotal or subtractFromTotal depending on whether checkbox has been checked or unchecked.
     if (inputToCheck.prop('checked')) {
         addToTotal(price);
     } else {
@@ -159,7 +185,7 @@ var updatePrice = function (clickedItem) {
     writeTotalPrice();
 };
 
-// Checkbox event listener.
+// Update price and check for schedule conflicts on each change of checkbox.
 $(".activities label").change(function () {
     updatePrice($(this));
     checkScheduleConflicts($(this));
@@ -173,7 +199,7 @@ $(".activities label").change(function () {
 $("[value='credit card']").prop("selected", true);
 $("[value='select_method']").prop("disabled", true);
 
-// Hide all then show selected payment info.
+// Hide all then show selected payment info passed in as an argument.
 var hideShowPaymentInfo = function (classToShow) {
     $(".credit-card, .paypal, .bitcoin").hide();
     $(classToShow).show();
@@ -183,6 +209,7 @@ var hideShowPaymentInfo = function (classToShow) {
 var selectPaymentToShow = function(selectedOption) {
     var classToPassIn;
 
+    // Had to use an if/else here because of the space in "credit card".
     if (selectedOption === "credit card") {
         classToPassIn = ".credit-card";
     } else {
@@ -204,6 +231,7 @@ $("#payment").change(function() {
 
 ////////// Form Validation //////////
 
+// Create all DOM elements to be added.
 var $nameError = $("<span class='invalid name-error'> (please provide your name)</span>");
 var $emailError = $("<span class='invalid email-error'> (please provide a valid email address)</span>");
 var $tshirtError = $("<p class='invalid tshirt-error'>Don't forget to pick a T-shirt</p>");
@@ -212,15 +240,21 @@ var $paymentError = $("<p class='invalid payment-error'>(please choose your paym
 
 // Email validation.
 var validateEmail = function () {
+
+    // Get email text from input.
     var enteredEmail = $("#mail").val();
-    var validEmailRegEx = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+
+    // Store email validation RegEx in variable.
+    var validEmailRegEx = (/^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i);
+
+    // Returns true if enteredEmail matches email validation RegEx.
     return validEmailRegEx.test(enteredEmail);
 };
 
 // Credit card validation with the Luhn formula.
 var validateCC = function (cardNumber) {
 
-    // Creates an array with each digit of number.
+    // Create an array with each digit of number.
     var cardNumberArray = (cardNumber).toString(10).split("").map(Number);
 
     // Drop the last digit and store in lastDigit.
@@ -255,32 +289,37 @@ var validateCC = function (cardNumber) {
 
 // Validates all fields and returns true or false.
 var validate = function () {
-    var valid = true; // Make true if all validation passes.
+    var valid = true; // Make false if any validation fails.
 
     // Test all fields and call errorStatus() for each.
 
-    // Name
+    // Name.
     if ($("#name").val().length > 0) {
         errorStatus("nameValid");
     } else {
         errorStatus("nameInvalid");
         valid = false;
     }
-    // Email
+
+    // Email. Run validateEmail function to determine true or false.
     if (validateEmail()) {
         errorStatus("emailValid");
     } else {
         errorStatus('emailInvalid');
         valid = false;
     }
-    // T-shirt
-    if ($('#design option[value="js puns"]').is(':selected') || $('#design option[value="heart js"]').is(':selected')) {
+
+    // T-shirt. Return true if either T-shirt option is selected.
+    if ($('#design option[value="js puns"]').is(':selected') ||
+        $('#design option[value="heart js"]').is(':selected')) {
+
         errorStatus("tshirtValid");
     } else {
         errorStatus('tshirtInvalid');
         valid = false;
     }
-    // Activities
+
+    // Activities. Return true if one or more inputs is checked.
     if ($(".activities input").is(':checked')) {
         errorStatus("activitiesValid");
     } else {
@@ -288,21 +327,23 @@ var validate = function () {
         valid = false;
     }
 
-    // Credit Card Number
+    // Credit Card Number. Run validateCC() to determine true or false.
     if (validateCC(parseInt($("#cc-num").val()))) {
         errorStatus("cardNumberValid");
     } else {
         errorStatus('cardNumberInvalid');
         valid = false;
     }
-    // Credit Card Zip
+
+    // Credit Card Zip. Return true if zip length is 5 and is a number.
     if (($("#zip").val().length === 5) && !isNaN(parseInt($("#zip").val()))) {
         errorStatus("cardZipValid");
     } else {
         errorStatus('cardZipInvalid');
         valid = false;
     }
-    // Credit Card CVV
+
+    // Credit Card CVV. Return true if CVV length is 3 and is a number.
     if (($("#cvv").val().length === 3) && !isNaN(parseInt($("#cvv").val()))) {
         errorStatus("cardCVVValid");
     } else {
@@ -310,7 +351,7 @@ var validate = function () {
         valid = false;
     }
 
-    // Marks credit card info as valid if paypal or bitcoin are selected.
+    // Marks credit card info as valid if paypal or bitcoin are selected as payment option.
     if ($("option[value='paypal']").is(':selected') || $("option[value='bitcoin']").is(':selected')) {
         errorStatus("cardNumberValid");
         errorStatus("cardZipValid");
@@ -318,7 +359,7 @@ var validate = function () {
         valid = true;
     }
 
-    // Display errors if invalid, submit form if valid.
+    // Submit form if valid.
     if (valid) {
         // If this was a real form I would submit the form like this.
         // $("form").submit();
@@ -331,6 +372,8 @@ var validate = function () {
 };
 
 // Displays error messages for invalid fields.
+// Valid or invalid status of each item checked is passed to this function as a string.
+// Each string is checked and action is taken based on its value.
 var errorStatus = function (status) {
     if (status === "nameInvalid") {
         $("#name").prev().addClass("invalid");
@@ -378,15 +421,15 @@ var errorStatus = function (status) {
     }
 };
 
-// Event handler for submit button.
+
+
+////////// Misc. //////////
+
+// Event handler for submit button. Call validate() and prevent form submission.
 $("button[type='submit']").click( function (e) {
     validate();
     e.preventDefault();
 });
-
-
-
-////////// Misc. //////////
 
 // Set focus on input on page load.
 $("#name").focus();

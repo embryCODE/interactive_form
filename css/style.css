@@ -196,5 +196,32 @@ button:hover {
 }
 
 .submitted {
-    color: #7B435B;
+    color: #A80B00;
+}
+
+/* Select menu styling */
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding: .9em;
+  margin-right: 10px;
+  font-size: 1em;
+  font-weight: 500;
+  color: #000;
+  border-radius: 0;
+  border: none;
+  border-color: #accbd9;
+  min-width: 100%;
+  padding-right: 40px;
+  background: #accbd9 url("../images/icon-down-arrow.svg") right 15px center no-repeat;
+  background-color: #accbd9;
+  background-size: 20px;
+}
+
+select:hover, select:focus {
+    background-color: #fff;
+    border-color: transparent;
+    box-shadow: 0 0 0 2px #5e97b0;
+    transition: box-shadow .4s, background-color .4s;
 }

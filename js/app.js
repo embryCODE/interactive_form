@@ -138,10 +138,10 @@ var subtractFromTotal = function (price) {
 
 // Append total price on activites div.
 var writeTotalPrice = function () {
-    $(".total-price").remove(); // First remove totalPrice h3 if it exists.
+    $(".total-price").remove(); // First remove totalPrice h4 if it exists.
     // Only append total price if price is greater than 0.
     if (totalPrice > 0) {
-        $(".activities").append("<h3 class='total-price'>Total: $" + totalPrice + "</h3>");
+        $(".activities").append("<h4 class='total-price'>Total: $" + totalPrice + "</h4>");
     }
 };
 

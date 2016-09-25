@@ -287,13 +287,7 @@ var validate = function () {
         errorStatus('activitiesInvalid');
         valid = false;
     }
-    // Payment
-    if ($("#payment option").is(':selected')) {
-        errorStatus("paymentValid");
-    } else {
-        errorStatus('paymentInvalid');
-        valid = false;
-    }
+
     // Credit Card Number
     if (validateCC(parseInt($("#cc-num").val()))) {
         errorStatus("cardNumberValid");
@@ -314,6 +308,14 @@ var validate = function () {
     } else {
         errorStatus('cardCVVInvalid');
         valid = false;
+    }
+
+    // Marks credit card info as valid if paypal or bitcoin are selected.
+    if ($("option[value='paypal']").is(':selected') || $("option[value='bitcoin']").is(':selected')) {
+        errorStatus("cardNumberValid");
+        errorStatus("cardZipValid");
+        errorStatus("cardCVVValid");
+        valid = true;
     }
 
     // Display errors if invalid, submit form if valid.

@@ -217,20 +217,17 @@ var validateEmail = function () {
     return validEmailRegEx.test(enteredEmail);
 };
 
-// Credit card validation.
+// Credit card validation with the Luhn formula.
 var validateCC = function (cardNumber) {
 
     // Creates an array with each digit of number.
     var cardNumberArray = (cardNumber).toString(10).split("").map(Number);
-    console.log(cardNumberArray);
 
     // Drop the last digit and store in lastDigit.
     var lastDigit = cardNumberArray.pop();
-    console.log(cardNumberArray);
 
     // Reverse the numbers.
     cardNumberArray = cardNumberArray.reverse();
-    console.log(cardNumberArray);
 
     // If number is in an odd position, multiply by 2.
     for(i = 0; i < cardNumberArray.length; i++) {
@@ -238,7 +235,6 @@ var validateCC = function (cardNumber) {
             cardNumberArray[i] = cardNumberArray[i] * 2;
         }
     }
-    console.log(cardNumberArray);
 
     // Subtract 9 from numbers over 9.
     for(i = 0; i < cardNumberArray.length; i++) {
@@ -246,23 +242,20 @@ var validateCC = function (cardNumber) {
             cardNumberArray[i] = cardNumberArray[i] - 9;
         }
     }
-    console.log(cardNumberArray);
 
     // Add all numbers.
     var added = 0;
     for (i = 0; i < cardNumberArray.length; i++) {
         added += cardNumberArray[i];
     }
-    console.log(added);
-    console.log(added % 10);
-    console.log(lastDigit);
-    // Mod 10 and compare to last digit. Returns true or false.
-    return (added % 10 === lastDigit);
+
+    // Add total to lastDigit. Mod 10 should return 0. Returns true or false.
+    return ((added + lastDigit) % 10 === 0);
 };
 
 // Validates all fields and returns true or false.
 var validate = function () {
-    var valid; // Make true if all validation passes.
+    var valid = true; // Make true if all validation passes.
 
     // Test all fields and call errorStatus() for each.
 
@@ -271,48 +264,56 @@ var validate = function () {
         errorStatus("nameValid");
     } else {
         errorStatus("nameInvalid");
+        valid = false;
     }
     // Email
     if (validateEmail()) {
         errorStatus("emailValid");
     } else {
         errorStatus('emailInvalid');
+        valid = false;
     }
     // T-shirt
     if ($('#design option[value="js puns"]').is(':selected') || $('#design option[value="heart js"]').is(':selected')) {
         errorStatus("tshirtValid");
     } else {
         errorStatus('tshirtInvalid');
+        valid = false;
     }
     // Activities
     if ($(".activities input").is(':checked')) {
         errorStatus("activitiesValid");
     } else {
         errorStatus('activitiesInvalid');
+        valid = false;
     }
     // Payment
     if ($("#payment option").is(':selected')) {
         errorStatus("paymentValid");
     } else {
         errorStatus('paymentInvalid');
+        valid = false;
     }
     // Credit Card Number
     if (validateCC(parseInt($("#cc-num").val()))) {
         errorStatus("cardNumberValid");
     } else {
         errorStatus('cardNumberInvalid');
+        valid = false;
     }
     // Credit Card Zip
     if (($("#zip").val().length === 5) && !isNaN(parseInt($("#zip").val()))) {
         errorStatus("cardZipValid");
     } else {
         errorStatus('cardZipInvalid');
+        valid = false;
     }
     // Credit Card CVV
     if (($("#cvv").val().length === 3) && !isNaN(parseInt($("#cvv").val()))) {
         errorStatus("cardCVVValid");
     } else {
         errorStatus('cardCVVInvalid');
+        valid = false;
     }
 
     // Display errors if invalid, submit form if valid.

@@ -83,7 +83,7 @@ var checkScheduleConflicts = function (clickedItem) {
 
     itemsToCheck.each(function () {
         // Find day and time of item in loop.
-        thisItemSchedule = getActivityData($(this));
+        var thisItemSchedule = getActivityData($(this));
 
         // Select checkbox of clicked item.
         var checkbox = clickedItem.children();
@@ -213,7 +213,7 @@ var $paymentError = $("<p class='invalid payment-error'>(please choose your paym
 // Email validation.
 var validateEmail = function () {
     var enteredEmail = $("#mail").val();
-    validEmailRegEx = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
+    var validEmailRegEx = /^[-a-z0-9~!$%^&*_=+}{\'?]+(\.[-a-z0-9~!$%^&*_=+}{\'?]+)*@([a-z0-9_][-a-z0-9_]*(\.[-a-z0-9_]+)*\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}))(:[0-9]{1,5})?$/i;
     return validEmailRegEx.test(enteredEmail);
 };
 
@@ -230,7 +230,7 @@ var validateCC = function (cardNumber) {
     cardNumberArray = cardNumberArray.reverse();
 
     // If number is in an odd position, multiply by 2.
-    for(i = 0; i < cardNumberArray.length; i++) {
+    for(var i = 0; i < cardNumberArray.length; i++) {
         if ((i % 2) === 0) {
             cardNumberArray[i] = cardNumberArray[i] * 2;
         }

@@ -293,6 +293,43 @@ var validate = function () {
 
     // Test all fields and call errorStatus() for each.
 
+    // Credit Card Number. Run validateCC() to determine true or false.
+    // Moved credit card and payment conditions above the rest to fix a bug
+    // where form would submit as correct if paypal and bitcoin options were
+    // selected.
+    if (validateCC(parseInt($("#cc-num").val()))) {
+        errorStatus("cardNumberValid");
+    } else {
+        errorStatus('cardNumberInvalid');
+        valid = false;
+    }
+
+    // Credit Card Zip. Return true if zip length is 5 and is a number.
+    if (($("#zip").val().length === 5) && !isNaN(parseInt($("#zip").val()))) {
+        errorStatus("cardZipValid");
+    } else {
+        errorStatus('cardZipInvalid');
+        valid = false;
+    }
+
+    // Credit Card CVV. Return true if CVV length is 3 and is a number.
+    if (($("#cvv").val().length === 3) && !isNaN(parseInt($("#cvv").val()))) {
+        errorStatus("cardCVVValid");
+    } else {
+        errorStatus('cardCVVInvalid');
+        valid = false;
+    }
+
+    // Marks credit card info as valid if paypal or bitcoin are selected as payment option.
+    if ($("option[value='paypal']").is(':selected') || $("option[value='bitcoin']").is(':selected')) {
+        errorStatus("cardNumberValid");
+        errorStatus("cardZipValid");
+        errorStatus("cardCVVValid");
+
+        // This line causes a bug when placed at bottom of checks.
+        valid = true;
+    }
+
     // Name.
     if ($("#name").val().length > 0) {
         errorStatus("nameValid");
@@ -325,38 +362,6 @@ var validate = function () {
     } else {
         errorStatus('activitiesInvalid');
         valid = false;
-    }
-
-    // Credit Card Number. Run validateCC() to determine true or false.
-    if (validateCC(parseInt($("#cc-num").val()))) {
-        errorStatus("cardNumberValid");
-    } else {
-        errorStatus('cardNumberInvalid');
-        valid = false;
-    }
-
-    // Credit Card Zip. Return true if zip length is 5 and is a number.
-    if (($("#zip").val().length === 5) && !isNaN(parseInt($("#zip").val()))) {
-        errorStatus("cardZipValid");
-    } else {
-        errorStatus('cardZipInvalid');
-        valid = false;
-    }
-
-    // Credit Card CVV. Return true if CVV length is 3 and is a number.
-    if (($("#cvv").val().length === 3) && !isNaN(parseInt($("#cvv").val()))) {
-        errorStatus("cardCVVValid");
-    } else {
-        errorStatus('cardCVVInvalid');
-        valid = false;
-    }
-
-    // Marks credit card info as valid if paypal or bitcoin are selected as payment option.
-    if ($("option[value='paypal']").is(':selected') || $("option[value='bitcoin']").is(':selected')) {
-        errorStatus("cardNumberValid");
-        errorStatus("cardZipValid");
-        errorStatus("cardCVVValid");
-        valid = true;
     }
 
     // Submit form if valid.

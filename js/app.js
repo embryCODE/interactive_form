@@ -217,15 +217,47 @@ var validateEmail = function () {
     return validEmailRegEx.test(enteredEmail);
 };
 
-// Credit card validation. Many thanks to https://gist.github.com/DiegoSalazar/4075533.
-var validateCC = function () {
-    // Get card number, as number, from input field.
-    cardNumber = parseInt($("#cc-num").val());
+// Credit card validation.
+var validateCC = function (cardNumber) {
 
+    // Creates an array with each digit of number.
+    var cardNumberArray = (cardNumber).toString(10).split("").map(Number);
+    console.log(cardNumberArray);
 
+    // Drop the last digit and store in lastDigit.
+    var lastDigit = cardNumberArray.pop();
+    console.log(cardNumberArray);
 
-    // Return true if card number is valid.
-    // return ???;
+    // Reverse the numbers.
+    cardNumberArray = cardNumberArray.reverse();
+    console.log(cardNumberArray);
+
+    // If number is in an odd position, multiply by 2.
+    for(i = 0; i < cardNumberArray.length; i++) {
+        if ((i % 2) === 0) {
+            cardNumberArray[i] = cardNumberArray[i] * 2;
+        }
+    }
+    console.log(cardNumberArray);
+
+    // Subtract 9 from numbers over 9.
+    for(i = 0; i < cardNumberArray.length; i++) {
+        if (cardNumberArray[i] > 9) {
+            cardNumberArray[i] = cardNumberArray[i] - 9;
+        }
+    }
+    console.log(cardNumberArray);
+
+    // Add all numbers.
+    var added = 0;
+    for (i = 0; i < cardNumberArray.length; i++) {
+        added += cardNumberArray[i];
+    }
+    console.log(added);
+    console.log(added % 10);
+    console.log(lastDigit);
+    // Mod 10 and compare to last digit. Returns true or false.
+    return (added % 10 === lastDigit);
 };
 
 // Validates all fields and returns true or false.
@@ -265,7 +297,7 @@ var validate = function () {
         errorStatus('paymentInvalid');
     }
     // Credit Card Number
-    if (validateCC()) {
+    if (validateCC(parseInt($("#cc-num").val()))) {
         errorStatus("cardNumberValid");
     } else {
         errorStatus('cardNumberInvalid');

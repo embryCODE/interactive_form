@@ -294,7 +294,7 @@ var validate = function () {
     // Test all fields and call errorStatus() for each.
 
     // Credit Card Number. Run validateCC() to determine true or false.
-    // Moved credit card and payment conditions above the rest to fix a bug
+    // Moved credit card and payment conditions above the others to fix a bug
     // where form would submit as correct if paypal and bitcoin options were
     // selected.
     if (validateCC(parseInt($("#cc-num").val()))) {

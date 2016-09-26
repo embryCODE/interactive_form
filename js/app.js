@@ -231,12 +231,20 @@ $("#payment").change(function() {
 
 ////////// Form Validation //////////
 
-// Create all DOM elements to be added.
+// Create all DOM elements of error messages to be added.
 var $nameError = $("<span class='invalid name-error'> (please provide your name)</span>");
 var $emailError = $("<span class='invalid email-error'> (please provide a valid email address)</span>");
 var $tshirtError = $("<p class='invalid tshirt-error'>Don't forget to pick a T-shirt</p>");
 var $activitiesError = $("<p class='invalid activities-error'>(please choose at least one activity)</p>");
-var $paymentError = $("<p class='invalid payment-error'>(please choose your payment method)</p>");
+
+// Don't need this variable because one of the three payment methods must be selected.
+// var $paymentError = $("<p class='invalid payment-error'>(please choose your payment method)</p>");
+
+// Clears all error messages.
+var clearAllErrors = function() {
+    $("input").prev().removeClass("invalid");
+    $(".name-error, .email-error, .tshirt-error, .activities-error, .payment-error").remove();
+};
 
 // Email validation.
 var validateEmail = function () {
@@ -287,80 +295,62 @@ var validateCC = function (cardNumber) {
     return ((added + lastDigit) % 10 === 0);
 };
 
-// Validates all fields and returns true or false.
+// Validate all fields and write error message if error found.
 var validate = function () {
+    clearAllErrors(); // Clear all errors before each check.
     var valid = true; // Make false if any validation fails.
 
-    // Test all fields and call errorStatus() for each.
-
-    // Credit Card Number. Run validateCC() to determine true or false.
-    // Moved credit card and payment conditions above the others to fix a bug
-    // where form would submit as correct if paypal and bitcoin options were
-    // selected.
-    if (validateCC(parseInt($("#cc-num").val()))) {
-        errorStatus("cardNumberValid");
-    } else {
-        errorStatus('cardNumberInvalid');
+    // Credit Card Number.
+    if (!validateCC(parseInt($("#cc-num").val()))) {
+        $("#cc-num").prev().addClass("invalid");
         valid = false;
     }
 
-    // Credit Card Zip. Return true if zip length is 5 and is a number.
-    if (($("#zip").val().length === 5) && !isNaN(parseInt($("#zip").val()))) {
-        errorStatus("cardZipValid");
-    } else {
-        errorStatus('cardZipInvalid');
+    // Credit Card Zip.
+    if (($("#zip").val().length !== 5) && isNaN(parseInt($("#zip").val()))) {
+        $("#zip").prev().addClass("invalid");
         valid = false;
     }
 
-    // Credit Card CVV. Return true if CVV length is 3 and is a number.
-    if (($("#cvv").val().length === 3) && !isNaN(parseInt($("#cvv").val()))) {
-        errorStatus("cardCVVValid");
-    } else {
-        errorStatus('cardCVVInvalid');
+    // Credit Card CVV.
+    if (($("#cvv").val().length !== 3) && isNaN(parseInt($("#cvv").val()))) {
+        $("#cvv").prev().addClass("invalid");
         valid = false;
     }
 
     // Marks credit card info as valid if paypal or bitcoin are selected as payment option.
     if ($("option[value='paypal']").is(':selected') || $("option[value='bitcoin']").is(':selected')) {
-        errorStatus("cardNumberValid");
-        errorStatus("cardZipValid");
-        errorStatus("cardCVVValid");
 
-        // This line causes a bug when placed at bottom of checks.
+        // This line has to happen before the rest of the checks below or it creates a bug.
         valid = true;
+        clearAllErrors();
     }
 
     // Name.
-    if ($("#name").val().length > 0) {
-        errorStatus("nameValid");
-    } else {
-        errorStatus("nameInvalid");
+    if ($("#name").val().length === 0) {
+        $("#name").prev().addClass("invalid");
+        $("#name").prev().append($nameError);
         valid = false;
     }
 
     // Email. Run validateEmail function to determine true or false.
-    if (validateEmail()) {
-        errorStatus("emailValid");
-    } else {
-        errorStatus('emailInvalid');
+    if (!validateEmail()) {
+        $("#mail").prev().addClass("invalid");
+        $("#mail").prev().append($emailError);
         valid = false;
     }
 
-    // T-shirt. Return true if either T-shirt option is selected.
-    if ($('#design option[value="js puns"]').is(':selected') ||
-        $('#design option[value="heart js"]').is(':selected')) {
+    // T-shirt. Check if either T-shirt option is not selected.
+    if (!($('#design option[value="js puns"]').is(':selected') ||
+        $('#design option[value="heart js"]').is(':selected'))) {
 
-        errorStatus("tshirtValid");
-    } else {
-        errorStatus('tshirtInvalid');
+        $(".shirt legend").append($tshirtError);
         valid = false;
     }
 
-    // Activities. Return true if one or more inputs is checked.
-    if ($(".activities input").is(':checked')) {
-        errorStatus("activitiesValid");
-    } else {
-        errorStatus('activitiesInvalid');
+    // Activities. Check if at least one input is checked. If not, display error.
+    if (!($(".activities input").is(':checked'))) {
+        $(".activities legend").append($activitiesError);
         valid = false;
     }
 
@@ -373,56 +363,6 @@ var validate = function () {
         $(".submitted").remove(); // Deletes first in case submit button clicked more than once.
         $("header").append("<p class='submitted'>Your form has been submitted!</p>");
         $('html, body').scrollTop(0);
-    }
-};
-
-// Displays error messages for invalid fields.
-// Valid or invalid status of each item checked is passed to this function as a string.
-// Each string is checked and action is taken based on its value.
-var errorStatus = function (status) {
-    if (status === "nameInvalid") {
-        $("#name").prev().addClass("invalid");
-        $("#name").prev().append($nameError);
-    } else if (status === "nameValid"){
-        $("#name").prev().removeClass("invalid");
-        $(".name-error").remove();
-    }
-    if (status === "emailInvalid") {
-        $("#mail").prev().addClass("invalid");
-        $("#mail").prev().append($emailError);
-    } else if (status === "emailValid"){
-        $("#mail").prev().removeClass("invalid");
-        $(".email-error").remove();
-    }
-    if (status === "tshirtInvalid") {
-        $(".shirt legend").append($tshirtError);
-    } else if (status === "tshirtValid"){
-        $(".tshirt-error").remove();
-    }
-    if (status === "activitiesInvalid") {
-        $(".activities legend").append($activitiesError);
-    } else if (status === "activitiesValid"){
-        $(".activities-error").remove();
-    }
-    if (status === "paymentInvalid") {
-        $(".payment-info legend").append($paymentError);
-    } else if (status === "paymentValid"){
-        $(".payment-error").remove();
-    }
-    if (status === "cardNumberInvalid") {
-        $("#cc-num").prev().addClass("invalid");
-    } else if (status === "cardNumberValid"){
-        $("#cc-num").prev().removeClass("invalid");
-    }
-    if (status === "cardZipInvalid") {
-        $("#zip").prev().addClass("invalid");
-    } else if (status === "cardZipValid"){
-        $("#zip").prev().removeClass("invalid");
-    }
-    if (status === "cardCVVInvalid") {
-        $("#cvv").prev().addClass("invalid");
-    } else if (status === "cardCVVValid"){
-        $("#cvv").prev().removeClass("invalid");
     }
 };
 

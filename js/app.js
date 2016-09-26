@@ -231,14 +231,16 @@ $("#payment").change(function() {
 
 ////////// Form Validation //////////
 
-// Create all DOM elements to be added.
+// Create all DOM elements of error messages to be added.
 var $nameError = $("<span class='invalid name-error'> (please provide your name)</span>");
 var $emailError = $("<span class='invalid email-error'> (please provide a valid email address)</span>");
 var $tshirtError = $("<p class='invalid tshirt-error'>Don't forget to pick a T-shirt</p>");
 var $activitiesError = $("<p class='invalid activities-error'>(please choose at least one activity)</p>");
-var $paymentError = $("<p class='invalid payment-error'>(please choose your payment method)</p>");
 
-// Clears all validation errors.
+// Don't need this variable because one of the three payment methods must be selected.
+// var $paymentError = $("<p class='invalid payment-error'>(please choose your payment method)</p>");
+
+// Clears all error messages.
 var clearAllErrors = function() {
     $("input").prev().removeClass("invalid");
     $(".name-error, .email-error, .tshirt-error, .activities-error, .payment-error").remove();
@@ -293,25 +295,24 @@ var validateCC = function (cardNumber) {
     return ((added + lastDigit) % 10 === 0);
 };
 
-// Validates all fields and writes error messages.
+// Validate all fields and write error message if error found.
 var validate = function () {
     clearAllErrors(); // Clear all errors before each check.
     var valid = true; // Make false if any validation fails.
 
-    // Credit Card Number. Run validateCC() to determine true or false.
+    // Credit Card Number.
     if (!validateCC(parseInt($("#cc-num").val()))) {
         $("#cc-num").prev().addClass("invalid");
         valid = false;
     }
 
-    // Credit Card Zip. Return true if zip length is 5 and is a number.
+    // Credit Card Zip.
     if (($("#zip").val().length !== 5) && isNaN(parseInt($("#zip").val()))) {
-
         $("#zip").prev().addClass("invalid");
         valid = false;
     }
 
-    // Credit Card CVV. Return true if CVV length is 3 and is a number.
+    // Credit Card CVV.
     if (($("#cvv").val().length !== 3) && isNaN(parseInt($("#cvv").val()))) {
         $("#cvv").prev().addClass("invalid");
         valid = false;
@@ -339,7 +340,7 @@ var validate = function () {
         valid = false;
     }
 
-    // T-shirt. Return true if either T-shirt option is selected.
+    // T-shirt. Check if either T-shirt option is not selected.
     if (!($('#design option[value="js puns"]').is(':selected') ||
         $('#design option[value="heart js"]').is(':selected'))) {
 
@@ -347,7 +348,7 @@ var validate = function () {
         valid = false;
     }
 
-    // Activities. Return true if one or more inputs is checked.
+    // Activities. Check if at least one input is checked. If not, display error.
     if (!($(".activities input").is(':checked'))) {
         $(".activities legend").append($activitiesError);
         valid = false;

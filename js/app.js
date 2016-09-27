@@ -1,4 +1,4 @@
-var thisApp = function($) {
+(function ($) {
     'use strict';
 
     ////////// Interactive Form //////////
@@ -384,4 +384,4 @@ var thisApp = function($) {
 
 
 
-}(jQuery);
+}) (jQuery);

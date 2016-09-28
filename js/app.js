@@ -1,4 +1,4 @@
-(function ($) {
+(function($) {
     'use strict';
 
     ////////// Interactive Form //////////
@@ -384,4 +384,4 @@
 
 
 
-}) (jQuery);
+})(jQuery);

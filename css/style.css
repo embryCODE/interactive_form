@@ -176,7 +176,6 @@ button:hover {
 }
 
 
-
 /* =================================
   Added Styling
 ==================================== */
@@ -200,24 +199,25 @@ button:hover {
     color: #A80B00;
 }
 
+
 /* Select menu styling */
 
 select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  padding: .9em;
-  margin-right: 10px;
-  font-size: 1em;
-  font-weight: 500;
-  color: #000;
-  border-radius: 0;
-  border: none;
-  border-color: #c1deeb;
-  min-width: 100%;
-  padding-right: 40px;
-  background: #c1deeb url("../images/icon-down-arrow.svg") right 15px center no-repeat;
-  background-color: #c1deeb;
-  background-size: 20px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: .9em;
+    margin-right: 10px;
+    font-size: 1em;
+    font-weight: 500;
+    color: #000;
+    border-radius: 0;
+    border: none;
+    border-color: #c1deeb;
+    min-width: 100%;
+    padding-right: 40px;
+    background: #c1deeb url("../images/icon-down-arrow.svg") right 15px center no-repeat;
+    background-color: #c1deeb;
+    background-size: 20px;
 }
 
 select:hover, select:focus {

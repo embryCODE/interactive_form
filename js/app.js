@@ -363,9 +363,23 @@
             // $("form").submit();
 
             // Fake submit.
+            clearAllErrors();
             $(".submitted").remove(); // Deletes first in case submit button clicked more than once.
             $("header").append("<p class='submitted'>Your form has been submitted!</p>");
-            $('html, body').scrollTop(0);
+            $("html, body").scrollTop(0);
+
+            // Clear and reset form.
+            $("input").val("");
+            $("input:checkbox").prop("checked", false);
+            $("input:checkbox").prop("disabled", false);
+            $("input, label").removeClass("disabled");
+            $("option[value='full-stack js developer']").prop("selected", true);
+            $("#other-title").hide();
+            $("option[value='credit card']").prop("selected", true);
+            hideShowPaymentInfo(".credit-card");
+            $("#design option[value='select-theme']").prop("selected", true);
+            setTshirtMenus();
+            $("#name").focus();
         }
     };
 
